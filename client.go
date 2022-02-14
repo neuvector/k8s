@@ -392,7 +392,7 @@ func (c *Client) client() *http.Client {
 //			// handle error
 //		}
 //		// resource is updated with response of create request
-//		fmt.Println(configMap.Metadata.GetCreationTimestamp())
+//		fmt.Println(conifgMap.Metaata.GetCreationTimestamp())
 //
 func (c *Client) Create(ctx context.Context, req Resource, options ...Option) error {
 	url, err := resourceURL(c.Endpoint, req, false, options...)

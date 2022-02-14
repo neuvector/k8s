@@ -133,8 +133,29 @@ type Rule struct {
 	// Depending on the enclosing object, subresources might not be allowed.
 	// Required.
 	Resources        []string `protobuf:"bytes,3,rep,name=resources" json:"resources,omitempty"`
+	// scope specifies the scope of this rule.
+	// Valid values are "Cluster", "Namespaced", and "*"
+	// "Cluster" means that only cluster-scoped resources will match this rule.
+	// Namespace API objects are cluster-scoped.
+	// "Namespaced" means that only namespaced resources will match this rule.
+	// "*" means that there are no scope restrictions.
+	// Subresources match the scope of their parent resource.
+	// Default is "*".
+	//
+	// +optional
+	Scope            *string `protobuf:"bytes,4,opt,name=scope" json:"scope,omitempty"`
 	XXX_unrecognized []byte   `json:"-"`
 }
+
+const (
+	// ClusterScope means that scope is limited to cluster-scoped objects.
+	// Namespace objects are cluster-scoped.
+	ClusterScope string = "Cluster"
+	// NamespacedScope means that scope is limited to namespaced objects.
+	NamespacedScope string = "Namespaced"
+	// AllScopes means that all scopes are included.
+	AllScopes string = "*"
+)
 
 func (m *Rule) Reset()                    { *m = Rule{} }
 func (m *Rule) String() string            { return proto.CompactTextString(m) }
@@ -160,6 +181,13 @@ func (m *Rule) GetResources() []string {
 		return m.Resources
 	}
 	return nil
+}
+
+func (m *Rule) GetScope() string {
+	if m != nil && m.Scope != nil {
+		return *m.Scope
+	}
+	return ""
 }
 
 // RuleWithOperations is a tuple of Operations and Resources. It is recommended to make
@@ -657,6 +685,12 @@ func (m *Rule) MarshalTo(dAtA []byte) (int, error) {
 			i += copy(dAtA[i:], s)
 		}
 	}
+	if m.Scope != nil {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintGenerated(dAtA, i, uint64(len(*m.Scope)))
+		i += copy(dAtA[i:], *m.Scope)
+	}
 	if m.XXX_unrecognized != nil {
 		i += copy(dAtA[i:], m.XXX_unrecognized)
 	}
@@ -1015,6 +1049,10 @@ func (m *Rule) Size() (n int) {
 			l = len(s)
 			n += 1 + l + sovGenerated(uint64(l))
 		}
+	}
+	if m.Scope != nil {
+		l = len(*m.Scope)
+		n += 1 + l + sovGenerated(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -1514,6 +1552,36 @@ func (m *Rule) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Resources = append(m.Resources, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Scope", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			s := string(dAtA[iNdEx:postIndex])
+			m.Scope = &s
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
