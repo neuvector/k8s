@@ -33,11 +33,11 @@ package v2beta2
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import _ "github.com/ericchiang/k8s/apis/core/v1"
-import k8s_io_apimachinery_pkg_api_resource "github.com/ericchiang/k8s/apis/resource"
-import k8s_io_apimachinery_pkg_apis_meta_v1 "github.com/ericchiang/k8s/apis/meta/v1"
-import _ "github.com/ericchiang/k8s/runtime"
-import _ "github.com/ericchiang/k8s/runtime/schema"
+import _ "github.com/neuvector/k8s/apis/core/v1"
+import k8s_io_apimachinery_pkg_api_resource "github.com/neuvector/k8s/apis/resource"
+import k8s_io_apimachinery_pkg_apis_meta_v1 "github.com/neuvector/k8s/apis/meta/v1"
+import _ "github.com/neuvector/k8s/runtime"
+import _ "github.com/neuvector/k8s/runtime/schema"
 
 import io "io"
 

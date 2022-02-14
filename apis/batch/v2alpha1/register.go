@@ -1,6 +1,6 @@
 package v2alpha1
 
-import "github.com/ericchiang/k8s"
+import "github.com/neuvector/k8s"
 
 func init() {
 	k8s.Register("batch", "v2alpha1", "cronjobs", true, &CronJob{})

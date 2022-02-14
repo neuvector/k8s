@@ -1,7 +1,7 @@
 # A simple Go client for Kubernetes
 
-[![GoDoc](https://godoc.org/github.com/ericchiang/k8s?status.svg)](https://godoc.org/github.com/ericchiang/k8s)
-[![Build Status](https://travis-ci.org/ericchiang/k8s.svg?branch=master)](https://travis-ci.org/ericchiang/k8s)
+[![GoDoc](https://godoc.org/github.com/neuvector/k8s?status.svg)](https://godoc.org/github.com/neuvector/k8s)
+[![Build Status](https://travis-ci.org/neuvector/k8s.svg?branch=master)](https://travis-ci.org/neuvector/k8s)
 
 A slimmed down Go client generated using Kubernetes' [protocol buffer][protobuf] support. This package behaves similarly to [official Kubernetes' Go client][client-go], but only imports two external dependencies.
 
@@ -13,8 +13,8 @@ import (
     "fmt"
     "log"
 
-    "github.com/ericchiang/k8s"
-    corev1 "github.com/ericchiang/k8s/apis/core/v1"
+    "github.com/neuvector/k8s"
+    corev1 "github.com/neuvector/k8s/apis/core/v1"
 )
 
 func main() {
@@ -136,8 +136,8 @@ Client operations support user defined resources, such as resources provided by 
 
 ```go
 import (
-    "github.com/ericchiang/k8s"
-    metav1 "github.com/ericchiang/k8s/apis/meta/v1"
+    "github.com/neuvector/k8s"
+    metav1 "github.com/neuvector/k8s/apis/meta/v1"
 )
 
 type MyResource struct {
@@ -225,7 +225,7 @@ Out-of-cluster clients can be constructed by either creating an `http.Client` ma
 import (
     "io/ioutil"
 
-    "github.com/ericchiang/k8s"
+    "github.com/neuvector/k8s"
 
     "github.com/ghodss/yaml"
 )
@@ -282,10 +282,10 @@ func createConfigMap(client *k8s.Client, name string, values map[string]string) 
 [go-proto]: https://godoc.org/github.com/golang/protobuf/proto
 [go-http2]: https://godoc.org/golang.org/x/net/http2
 [protobuf]: https://developers.google.com/protocol-buffers/
-[unversioned-status]: https://godoc.org/github.com/ericchiang/k8s/api/unversioned#Status
-[k8s-error]: https://godoc.org/github.com/ericchiang/k8s#APIError
-[config]: https://godoc.org/github.com/ericchiang/k8s#Config
-[string]: https://godoc.org/github.com/ericchiang/k8s#String
+[unversioned-status]: https://godoc.org/github.com/neuvector/k8s/api/unversioned#Status
+[k8s-error]: https://godoc.org/github.com/neuvector/k8s#APIError
+[config]: https://godoc.org/github.com/neuvector/k8s#Config
+[string]: https://godoc.org/github.com/neuvector/k8s#String
 [crds]: https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/
 [custom-api-servers]: https://kubernetes.io/docs/concepts/api-extension/apiserver-aggregation/
 [proto-msg]: https://godoc.org/github.com/golang/protobuf/proto#Message 

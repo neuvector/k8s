@@ -10,8 +10,8 @@ import (
 	"io"
 	"io/ioutil"
 
-	metav1 "github.com/ericchiang/k8s/apis/meta/v1"
-	"github.com/ericchiang/k8s/runtime"
+	metav1 "github.com/neuvector/k8s/apis/meta/v1"
+	"github.com/neuvector/k8s/runtime"
 	"github.com/golang/protobuf/proto"
 )
 

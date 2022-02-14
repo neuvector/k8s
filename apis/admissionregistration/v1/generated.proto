@@ -21,9 +21,9 @@ syntax = "proto2";
 
 package k8s.io.api.admissionregistration.v1;
 
-//import k8s_io_apimachinery_pkg_apis_meta_v1 "github.com/ericchiang/k8s/apis/meta/v1"
-import "github.com/ericchiang/k8s/runtime";
-import "github.com/ericchiang/k8s/runtime/schema";
+//import k8s_io_apimachinery_pkg_apis_meta_v1 "github.com/neuvector/k8s/apis/meta/v1"
+import "github.com/neuvector/k8s/runtime";
+import "github.com/neuvector/k8s/runtime/schema";
 
 
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";

@@ -4,8 +4,8 @@ Package k8s implements a Kubernetes client.
 	import (
 		"context"
 
-		"github.com/ericchiang/k8s"
-		appsv1 "github.com/ericchiang/k8s/apis/apps/v1"
+		"github.com/neuvector/k8s"
+		appsv1 "github.com/neuvector/k8s/apis/apps/v1"
 	)
 
 	func listDeployments(ctx context.Context) (*appsv1.DeploymentList, error) {
@@ -42,7 +42,7 @@ import (
 
 	"golang.org/x/net/http2"
 
-	metav1 "github.com/ericchiang/k8s/apis/meta/v1"
+	metav1 "github.com/neuvector/k8s/apis/meta/v1"
 )
 
 const (

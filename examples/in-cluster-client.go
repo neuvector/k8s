@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ericchiang/k8s"
-	corev1 "github.com/ericchiang/k8s/apis/core/v1"
+	"github.com/neuvector/k8s"
+	corev1 "github.com/neuvector/k8s/apis/core/v1"
 )
 
 func listNodes() {

@@ -1,6 +1,6 @@
 package v1
 
-import "github.com/ericchiang/k8s"
+import "github.com/neuvector/k8s"
 
 func init() {
 	k8s.Register("apps", "v1", "controllerrevisions", true, &ControllerRevision{})

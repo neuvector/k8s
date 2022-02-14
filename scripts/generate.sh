@@ -34,7 +34,7 @@ cd -
 export GOPATH=$TEMPDIR
 function mvpkg {
     FROM="k8s.io/$1"
-    TO="github.com/ericchiang/k8s/$2"
+    TO="github.com/neuvector/k8s/$2"
     mkdir -p "$GOPATH/src/$(dirname $TO)"
     echo "gompvpkg -from=$FROM -to=$TO"
     gomvpkg -from=$FROM -to=$TO
@@ -51,4 +51,4 @@ done
 mvpkg kube-aggregator/pkg/apis/apiregistration apis/apiregistration
 
 rm -rf api apis runtime util
-mv $TEMPDIR/src/github.com/ericchiang/k8s/* .
+mv $TEMPDIR/src/github.com/neuvector/k8s/* .

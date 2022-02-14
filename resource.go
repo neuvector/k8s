@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	metav1 "github.com/ericchiang/k8s/apis/meta/v1"
+	metav1 "github.com/neuvector/k8s/apis/meta/v1"
 )
 
 // Option represents optional call parameters, such as label selectors.

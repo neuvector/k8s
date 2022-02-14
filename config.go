@@ -17,7 +17,7 @@ limitations under the License.
 package k8s
 
 import (
-	"github.com/ericchiang/k8s/runtime"
+	"github.com/neuvector/k8s/runtime"
 )
 
 // Where possible, json tags match the cli argument names.

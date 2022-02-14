@@ -210,11 +210,11 @@ package v1
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import k8s_io_apimachinery_pkg_api_resource "github.com/ericchiang/k8s/apis/resource"
-import k8s_io_apimachinery_pkg_apis_meta_v1 "github.com/ericchiang/k8s/apis/meta/v1"
-import k8s_io_apimachinery_pkg_runtime "github.com/ericchiang/k8s/runtime"
-import _ "github.com/ericchiang/k8s/runtime/schema"
-import k8s_io_apimachinery_pkg_util_intstr "github.com/ericchiang/k8s/util/intstr"
+import k8s_io_apimachinery_pkg_api_resource "github.com/neuvector/k8s/apis/resource"
+import k8s_io_apimachinery_pkg_apis_meta_v1 "github.com/neuvector/k8s/apis/meta/v1"
+import k8s_io_apimachinery_pkg_runtime "github.com/neuvector/k8s/runtime"
+import _ "github.com/neuvector/k8s/runtime/schema"
+import k8s_io_apimachinery_pkg_util_intstr "github.com/neuvector/k8s/util/intstr"
 
 import io "io"
 

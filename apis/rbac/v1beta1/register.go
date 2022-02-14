@@ -1,6 +1,6 @@
 package v1beta1
 
-import "github.com/ericchiang/k8s"
+import "github.com/neuvector/k8s"
 
 func init() {
 	k8s.Register("rbac.authorization.k8s.io", "v1beta1", "clusterroles", false, &ClusterRole{})

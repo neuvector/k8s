@@ -6,8 +6,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ericchiang/k8s"
-	metav1 "github.com/ericchiang/k8s/apis/meta/v1"
+	"github.com/neuvector/k8s"
+	metav1 "github.com/neuvector/k8s/apis/meta/v1"
 )
 
 func init() {
