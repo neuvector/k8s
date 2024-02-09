@@ -827,7 +827,7 @@ func init() {
 	proto.RegisterType((*WebhookClientConfig)(nil), "k8s.io.api.admissionregistration.v1.WebhookClientConfig")
 }
 
-func init() { proto.RegisterFile("generated.proto", fileDescriptor0) }
+func init() { proto.RegisterFile("k8s.io/api/admissionregistration/v1/generated.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
 	// 767 bytes of a gzipped FileDescriptorProto
