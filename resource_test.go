@@ -4,44 +4,35 @@ import (
 	"testing"
 	"time"
 
-	metav1 "github.com/neuvector/k8s/apis/meta/v1"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // Redefine types since all API groups import "github.com/neuvector/k8s"
 // We can't use them here because it'll create a circular import cycle.
 
 type Pod struct {
-	Metadata *metav1.ObjectMeta
+	metav1.ObjectMeta
 }
 
 type PodList struct {
-	Metadata *metav1.ListMeta
+	metav1.ListMeta
 }
 
-func (p *Pod) GetMetadata() *metav1.ObjectMeta   { return p.Metadata }
-func (p *PodList) GetMetadata() *metav1.ListMeta { return p.Metadata }
-
 type Deployment struct {
-	Metadata *metav1.ObjectMeta
+	metav1.ObjectMeta
 }
 
 type DeploymentList struct {
-	Metadata *metav1.ListMeta
+	metav1.ListMeta
 }
 
-func (p *Deployment) GetMetadata() *metav1.ObjectMeta   { return p.Metadata }
-func (p *DeploymentList) GetMetadata() *metav1.ListMeta { return p.Metadata }
-
 type ClusterRole struct {
-	Metadata *metav1.ObjectMeta
+	metav1.ObjectMeta
 }
 
 type ClusterRoleList struct {
-	Metadata *metav1.ListMeta
+	metav1.ListMeta
 }
-
-func (p *ClusterRole) GetMetadata() *metav1.ObjectMeta   { return p.Metadata }
-func (p *ClusterRoleList) GetMetadata() *metav1.ListMeta { return p.Metadata }
 
 func init() {
 	Register("", "v1", "pods", true, &Pod{})
@@ -58,7 +49,7 @@ func TestResourceURL(t *testing.T) {
 	tests := []struct {
 		name     string
 		endpoint string
-		resource Resource
+		resource metav1.Object
 		withName bool
 		options  []Option
 		want     string
@@ -68,9 +59,9 @@ func TestResourceURL(t *testing.T) {
 			name:     "pod",
 			endpoint: "https://example.com",
 			resource: &Pod{
-				Metadata: &metav1.ObjectMeta{
-					Namespace: String("my-namespace"),
-					Name:      String("my-pod"),
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "my-namespace",
+					Name:      "my-pod",
 				},
 			},
 			want: "https://example.com/api/v1/namespaces/my-namespace/pods",
@@ -79,9 +70,9 @@ func TestResourceURL(t *testing.T) {
 			name:     "deployment",
 			endpoint: "https://example.com",
 			resource: &Deployment{
-				Metadata: &metav1.ObjectMeta{
-					Namespace: String("my-namespace"),
-					Name:      String("my-deployment"),
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "my-namespace",
+					Name:      "my-deployment",
 				},
 			},
 			want: "https://example.com/apis/apps/v1beta2/namespaces/my-namespace/deployments",
@@ -90,9 +81,9 @@ func TestResourceURL(t *testing.T) {
 			name:     "deployment-with-name",
 			endpoint: "https://example.com",
 			resource: &Deployment{
-				Metadata: &metav1.ObjectMeta{
-					Namespace: String("my-namespace"),
-					Name:      String("my-deployment"),
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "my-namespace",
+					Name:      "my-deployment",
 				},
 			},
 			withName: true,
@@ -102,9 +93,9 @@ func TestResourceURL(t *testing.T) {
 			name:     "deployment-with-subresource",
 			endpoint: "https://example.com",
 			resource: &Deployment{
-				Metadata: &metav1.ObjectMeta{
-					Namespace: String("my-namespace"),
-					Name:      String("my-deployment"),
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "my-namespace",
+					Name:      "my-deployment",
 				},
 			},
 			withName: true,
@@ -117,9 +108,9 @@ func TestResourceURL(t *testing.T) {
 			name:     "pod-with-timeout",
 			endpoint: "https://example.com",
 			resource: &Pod{
-				Metadata: &metav1.ObjectMeta{
-					Namespace: String("my-namespace"),
-					Name:      String("my-pod"),
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "my-namespace",
+					Name:      "my-pod",
 				},
 			},
 			options: []Option{
@@ -131,9 +122,9 @@ func TestResourceURL(t *testing.T) {
 			name:     "pod-with-resource-version",
 			endpoint: "https://example.com",
 			resource: &Pod{
-				Metadata: &metav1.ObjectMeta{
-					Namespace: String("my-namespace"),
-					Name:      String("my-pod"),
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "my-namespace",
+					Name:      "my-pod",
 				},
 			},
 			options: []Option{
