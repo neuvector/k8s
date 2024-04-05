@@ -6,25 +6,21 @@ import (
 	"testing"
 
 	"github.com/neuvector/k8s"
-	corev1 "github.com/neuvector/k8s/apis/core/v1"
-	metav1 "github.com/neuvector/k8s/apis/meta/v1"
+    corev1 "k8s.io/api/core/v1"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // configMapJSON is used to test the JSON serialization watch.
 type configMapJSON struct {
-	Metadata *metav1.ObjectMeta `json:"metadata"`
+	metav1.ObjectMeta `json:"metadata"`
 	Data     map[string]string  `json:"data"`
-}
-
-func (c *configMapJSON) GetMetadata() *metav1.ObjectMeta {
-	return c.Metadata
 }
 
 func init() {
 	k8s.Register("", "v1", "configmaps", true, &configMapJSON{})
 }
 
-func testWatch(t *testing.T, client *k8s.Client, namespace string, newCM func() k8s.Resource, update func(cm k8s.Resource)) {
+func testWatch(t *testing.T, client *k8s.Client, namespace string, newCM func() metav1.Object, update func(cm metav1.Object)) {
 	w, err := client.Watch(context.TODO(), namespace, newCM())
 	if err != nil {
 		t.Errorf("watch configmaps: %v", err)
@@ -42,8 +38,8 @@ func testWatch(t *testing.T, client *k8s.Client, namespace string, newCM func() 
 		if eT != eventType {
 			t.Errorf("expected event type %q got %q", eventType, eT)
 		}
-		cm.GetMetadata().ResourceVersion = k8s.String("")
-		got.GetMetadata().ResourceVersion = k8s.String("")
+		cm.SetResourceVersion("")
+		got.SetResourceVersion("")
 		if !reflect.DeepEqual(got, cm) {
 			t.Errorf("configmaps didn't match")
 			t.Errorf("want: %#v", cm)
@@ -74,16 +70,16 @@ func testWatch(t *testing.T, client *k8s.Client, namespace string, newCM func() 
 
 func TestWatchConfigMapJSON(t *testing.T) {
 	withNamespace(t, func(client *k8s.Client, namespace string) {
-		newCM := func() k8s.Resource {
+		newCM := func() metav1.Object {
 			return &configMapJSON{
-				Metadata: &metav1.ObjectMeta{
-					Name:      k8s.String("my-configmap"),
-					Namespace: &namespace,
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "my-configmap",
+					Namespace: namespace,
 				},
 			}
 		}
 
-		updateCM := func(cm k8s.Resource) {
+		updateCM := func(cm metav1.Object) {
 			(cm.(*configMapJSON)).Data = map[string]string{"hello": "world"}
 		}
 		testWatch(t, client, namespace, newCM, updateCM)
@@ -92,16 +88,16 @@ func TestWatchConfigMapJSON(t *testing.T) {
 
 func TestWatchConfigMapProto(t *testing.T) {
 	withNamespace(t, func(client *k8s.Client, namespace string) {
-		newCM := func() k8s.Resource {
+		newCM := func() metav1.Object {
 			return &corev1.ConfigMap{
-				Metadata: &metav1.ObjectMeta{
-					Name:      k8s.String("my-configmap"),
-					Namespace: &namespace,
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "my-configmap",
+					Namespace: namespace,
 				},
 			}
 		}
 
-		updateCM := func(cm k8s.Resource) {
+		updateCM := func(cm metav1.Object) {
 			(cm.(*corev1.ConfigMap)).Data = map[string]string{"hello": "world"}
 		}
 		testWatch(t, client, namespace, newCM, updateCM)

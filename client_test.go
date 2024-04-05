@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/neuvector/k8s"
-	corev1 "github.com/neuvector/k8s/apis/core/v1"
-	metav1 "github.com/neuvector/k8s/apis/meta/v1"
+    corev1 "k8s.io/api/core/v1"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const skipMsg = `
@@ -66,8 +66,8 @@ func withNamespace(t *testing.T, test func(client *k8s.Client, namespace string)
 	}
 	name := "k8s-test-" + string(b)
 	namespace := corev1.Namespace{
-		Metadata: &metav1.ObjectMeta{
-			Name: &name,
+		ObjectMeta: metav1.ObjectMeta{
+			Name: name,
 		},
 	}
 	if err := client.Create(context.TODO(), &namespace); err != nil {
@@ -97,15 +97,15 @@ func TestListNodes(t *testing.T) {
 	}
 
 	for _, node := range nodes.Items {
-		if node.Metadata.Annotations == nil {
-			node.Metadata.Annotations = map[string]string{}
+		if node.Annotations == nil {
+			node.Annotations = map[string]string{}
 		}
-		node.Metadata.Annotations["foo"] = "bar"
-		if err := client.Update(context.TODO(), node); err != nil {
+		node.Annotations["foo"] = "bar"
+		if err := client.Update(context.TODO(), &node); err != nil {
 			t.Fatal(err)
 		}
-		delete(node.Metadata.Annotations, "foo")
-		if err := client.Update(context.TODO(), node); err != nil {
+		delete(node.Annotations, "foo")
+		if err := client.Update(context.TODO(), &node); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -136,9 +136,9 @@ func TestUpdateNamespaceStatus(t *testing.T) {
 func TestCreateConfigMap(t *testing.T) {
 	withNamespace(t, func(client *k8s.Client, namespace string) {
 		cm := &corev1.ConfigMap{
-			Metadata: &metav1.ObjectMeta{
-				Name:      k8s.String("my-configmap"),
-				Namespace: &namespace,
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "my-configmap",
+				Namespace: namespace,
 			},
 		}
 		if err := client.Create(context.TODO(), cm); err != nil {
@@ -146,7 +146,7 @@ func TestCreateConfigMap(t *testing.T) {
 			return
 		}
 		got := new(corev1.ConfigMap)
-		if err := client.Get(context.TODO(), namespace, *cm.Metadata.Name, got); err != nil {
+		if err := client.Get(context.TODO(), namespace, cm.GetName(), got); err != nil {
 			t.Errorf("get configmap: %v", err)
 			return
 		}
@@ -165,9 +165,9 @@ func TestListConfigMap(t *testing.T) {
 	withNamespace(t, func(client *k8s.Client, namespace string) {
 		for i := 0; i < 5; i++ {
 			cm := &corev1.ConfigMap{
-				Metadata: &metav1.ObjectMeta{
-					Name:      k8s.String(fmt.Sprintf("my-configmap-%d", i)),
-					Namespace: &namespace,
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      fmt.Sprintf("my-configmap-%d", i),
+					Namespace: namespace,
 				},
 			}
 			if err := client.Create(context.TODO(), cm); err != nil {
@@ -218,9 +218,9 @@ func TestDelete(t *testing.T) {
 
 	withNamespace(t, func(client *k8s.Client, namespace string) {
 		cm := &corev1.ConfigMap{
-			Metadata: &metav1.ObjectMeta{
-				Name:      k8s.String("my-configmap"),
-				Namespace: &namespace,
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "my-configmap",
+				Namespace: namespace,
 			},
 		}
 		if err := client.Create(context.TODO(), cm); err != nil {
@@ -229,15 +229,15 @@ func TestDelete(t *testing.T) {
 		}
 
 		cm2 := &corev1.ConfigMap{
-			Metadata: &metav1.ObjectMeta{
-				Name:      k8s.String("my-configmap-2"),
-				Namespace: &namespace,
-				OwnerReferences: []*metav1.OwnerReference{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "my-configmap-2",
+				Namespace: namespace,
+				OwnerReferences: []metav1.OwnerReference{
 					{
-						ApiVersion:         k8s.String("v1"),
-						Kind:               k8s.String("ConfigMap"),
-						Name:               cm.Metadata.Name,
-						Uid:                cm.Metadata.Uid,
+						APIVersion:         "v1",
+						Kind:               "ConfigMap",
+						Name:               cm.GetName(),
+						UID:                cm.GetUID(),
 						BlockOwnerDeletion: k8s.Bool(true),
 					},
 				},
@@ -255,7 +255,7 @@ func TestDelete(t *testing.T) {
 		var err error
 		for i := 0; i < 50; i++ {
 			err = func() error {
-				err := client.Get(context.TODO(), namespace, *cm2.Metadata.Name, cm2)
+				err := client.Get(context.TODO(), namespace, cm2.GetName(), cm2)
 				if err == nil {
 					return fmt.Errorf("expected 404 error")
 				}
@@ -282,9 +282,9 @@ func TestDelete(t *testing.T) {
 func TestDeleteOrphan(t *testing.T) {
 	withNamespace(t, func(client *k8s.Client, namespace string) {
 		cm := &corev1.ConfigMap{
-			Metadata: &metav1.ObjectMeta{
-				Name:      k8s.String("my-configmap"),
-				Namespace: &namespace,
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "my-configmap",
+				Namespace: namespace,
 			},
 		}
 		if err := client.Create(context.TODO(), cm); err != nil {
@@ -293,15 +293,15 @@ func TestDeleteOrphan(t *testing.T) {
 		}
 
 		cm2 := &corev1.ConfigMap{
-			Metadata: &metav1.ObjectMeta{
-				Name:      k8s.String("my-configmap-2"),
-				Namespace: &namespace,
-				OwnerReferences: []*metav1.OwnerReference{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "my-configmap-2",
+				Namespace: namespace,
+				OwnerReferences: []metav1.OwnerReference{
 					{
-						ApiVersion: k8s.String("v1"),
-						Kind:       k8s.String("ConfigMap"),
-						Name:       cm.Metadata.Name,
-						Uid:        cm.Metadata.Uid,
+						APIVersion: "v1",
+						Kind:       "ConfigMap",
+						Name:       cm.GetName(),
+						UID:        cm.GetUID(),
 					},
 				},
 			},
@@ -319,7 +319,7 @@ func TestDeleteOrphan(t *testing.T) {
 		// Since there's no explicit even for us to wait for
 		time.Sleep(time.Second)
 
-		err := client.Get(context.TODO(), namespace, *cm2.Metadata.Name, cm2)
+		err := client.Get(context.TODO(), namespace, cm2.GetName(), cm2)
 		if err != nil {
 			t.Errorf("failed to get configmap: %v", err)
 		}
@@ -369,9 +369,9 @@ func TestLabelSelector(t *testing.T) {
 	withNamespace(t, func(client *k8s.Client, namespace string) {
 		for i := 0; i < 5; i++ {
 			cm := &corev1.ConfigMap{
-				Metadata: &metav1.ObjectMeta{
-					Name:      k8s.String(fmt.Sprintf("my-configmap-%d", i)),
-					Namespace: &namespace,
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      fmt.Sprintf("my-configmap-%d", i),
+					Namespace: namespace,
 					Labels: map[string]string{
 						"configmap": "true",
 						"n":         strconv.Itoa(i),
